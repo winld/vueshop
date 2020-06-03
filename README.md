@@ -1,4 +1,5 @@
-# shop-demo
+# vueshop 
+# 使用架构  vue+vuex+router+element-ui
 
 ## Project setup
 ```
