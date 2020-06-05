@@ -41,7 +41,7 @@
 							<el-button size="mini" round type="primary" icon="el-icon-edit" @click="getEditUser(scope.row)"></el-button>
 						</el-tooltip>
 						<el-tooltip class="item" effect="dark" content="删除用户" placement="top" :enterable="false">
-							<el-button size="mini" round type="danger" icon="el-icon-delete" @click="delUser(scope.row)"></el-button>
+							<el-button size="mini" round type="danger" icon="el-icon-delete" @click="delUser(scope.row.id)"></el-button>
 						</el-tooltip>
 						<el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
 							<el-button size="mini" round type="warning" icon="el-icon-setting"></el-button>
@@ -237,8 +237,22 @@ export default {
       })
     },
     //  删除
-    async delUser (userinfo) {
-      const { data: res } = await this.$http.delete(`users/${userinfo.id}`)
+    async delUser (id) {
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+      // 点击确定 返回值为：confirm
+      // 点击取消 返回值为： cancel
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消删除')
+      }
+      const { data: res } = await this.$http.delete(`users/${id}`)
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.msg)
       }
